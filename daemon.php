@@ -46,11 +46,13 @@ while(1){
     {
         if(strpos($key, "id") !== false){
             $taskJson = json_decode($redis->get($key), true);
-            if(is_null($taskJson['result'])) {
-                $taskArray = json_decode($redis->get($key), true);
-                $taskArray['result'] = fibonacci($taskArray['num']);
-                $redis->set($key, json_encode($taskArray));
-                echo $taskArray['result'],"\n";
+            if(is_null($taskJson['result']) && $taskJson['status'] == 0) {
+                $taskJson['status'] = 1;
+                $redis->set($key, json_encode($taskJson));
+                $taskJson['result'] = fibonacci($taskJson['num']);
+                $redis->set($key, json_encode($taskJson));
+                echo $taskJson['result'],"\n";
+                break;
             }
             else {
                 echo "Работы нет. \n";
