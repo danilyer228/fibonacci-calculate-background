@@ -43,10 +43,12 @@ catch (Exception $e) {
                 echo "<input type='number' placeholder='число' name='num'>";
                 echo "<input type='submit' value='go'>";
             } else {
-                $taskJson = json_encode(array("num" => $num, "status" => 0, "result" => NULL));
-                $id = $_SESSION['id'] . "-" . $num;
-                $redis->set("{$id}", $taskJson);
-                header("Location: result.php?num={$num}");
+                if($num !== '') {
+                    $id = $_SESSION['id'] . "-" . $num;
+                    $redis->hset("{$id}", "status", 0);
+                    $redis->hset("{$id}", "result", 0);
+                    header("Location: result.php?num={$num}");
+                }
             }
             ?>
         </form>

@@ -19,8 +19,7 @@ while(1) {
     sort($list);
 
     foreach ($list as $key) {
-        $taskJson = json_decode($redis->get($key), true);
-        if($taskJson['result'] !== NULL) {
+        if($redis->hget("{$key}", "result") !== 0) {
             $redis->del($key);
         }
     }

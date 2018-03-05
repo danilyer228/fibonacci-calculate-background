@@ -32,12 +32,10 @@ foreach ($list as $key) {
     }
 }
 
-
-
 echo "<h2>Результат({$_GET['num']})</h2>";
-$result = json_decode($redis->get($id), true);
-if($result['result']){
-    echo $result['result'];
+$result = $redis->hget("{$id}", "result");
+if($result !== "0"){
+    echo $result;
 } else {
     echo "Ждите.";
 }

@@ -45,13 +45,12 @@ while(1){
     foreach ($list as $key)
     {
         if(strpos($key, "id") !== false){
-            $taskJson = json_decode($redis->get($key), true);
-            if(is_null($taskJson['result']) && $taskJson['status'] == 0) {
-                $taskJson['status'] = 1;
-                $redis->set($key, json_encode($taskJson));
-                $taskJson['result'] = fibonacci($taskJson['num']);
-                $redis->set($key, json_encode($taskJson));
-                echo $taskJson['result'],"\n";
+            $id = $key;
+            $num = explode('-', $key)[1];
+            if($redis->hget("{$id}", "result") == 0 && $redis->hget("{$id}", "result") == 0) {
+                $redis->hset("{$id}", "status", 1);
+                $redis->hset("{$id}", "result", fibonacci($num));
+                echo $redis->hget("{$id}", "result"),"\n";
                 break;
             }
             else {
